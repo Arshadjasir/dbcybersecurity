@@ -47,5 +47,14 @@ class Get
         return $temp;
      }
 
+    public function select_User(){
+        $query = "SELECT * FROM users ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            $temp[] = $row;
+        }
+        return $temp;
+    }
 }
 ?>

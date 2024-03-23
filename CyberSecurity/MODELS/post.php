@@ -27,9 +27,22 @@ public function insert_Admin($Name,$Mail,$Password,$Expiry,$active){
     } catch (\Throwable $th) {
         throw $th;
     }
-
-   
 }
 
+public function insert_User($Name,$User,$Mail,$Password,$Whatsapp,$Facebook,$Instagram,$isActive){
+    try {
+     $get = "Select * from users where Mail = '$Mail'";
+    $getresult = mysqli_query($this->conn, $get);
+    if(mysqli_num_rows($getresult)<=0){
+    $query = "insert into users (Name,User,Mail,Password,Whatsapp,Facebook,Instagram,isActive) values ('$Name','$User','$Mail','$Password','$Whatsapp','$Facebook','$Instagram',$isActive) ";
+    $result = mysqli_query($this->conn, $query);
+    return "success";
+    }else{
+    return "userexist";
+    }
+    } catch (\Throwable $th) {
+        throw $th;
+    }
+}
 }
 ?>
