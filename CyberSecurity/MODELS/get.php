@@ -13,16 +13,39 @@ class Get
         $this->conn = $db->connect();
     }
 
-
-    public function select_Admin($id){
-        $query = "SELECT * FROM notes where id ='$id' ";
+    public function select_Admin(){
+        $query = "SELECT * FROM admin ";
         $result = mysqli_query($this->conn, $query);
         $temp = array();
         while ($row = $result->fetch_assoc()) {
+            if($row['active']!=0){
             $temp[] = $row;
+            }
         }
         return $temp;
     }
+     public function blocked_Admin(){
+        $query = "SELECT * FROM admin ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            if($row['active']!=1){
+            $temp[] = $row;
+            }
+        }
+        return $temp;
+    }
+     public function Recent_Admin(){
+      $query =  "SELECT * FROM admin ORDER BY createdate DESC limit 3";
+      $result = mysqli_query($this->conn, $query);
+         $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            if($row['active']!=1){
+            $temp[] = $row;
+            }
+        }
+        return $temp;
+     }
 
 }
 ?>

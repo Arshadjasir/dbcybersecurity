@@ -16,12 +16,11 @@ class Delete
     public function delete_Admin($id){
         try {
             //code...
-            $query = "delete from notes where id ='$id' ";
+            $query = "delete from admin where id ='$id' ";
             $result = mysqli_query($this->conn, $query);
         } catch (\Throwable $th) {
            return $th;
         }
-       
         return "success";
     }
 }
