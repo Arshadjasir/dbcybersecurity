@@ -24,5 +24,17 @@ class Delete
        
         return "success";
     }
+
+    public function delete_User($id){
+        try {
+            //code...
+            $query = "delete from users where id ='$id' ";
+            $result = mysqli_query($this->conn, $query);
+        } catch (\Throwable $th) {
+           return $th;
+        }
+       
+        return "success";
+    }
 }
 ?>
