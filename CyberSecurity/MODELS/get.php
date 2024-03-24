@@ -24,7 +24,8 @@ class Get
         }
         return $temp;
     }
-     public function blocked_Admin(){
+
+    public function blocked_Admin(){
         $query = "SELECT * FROM admin ";
         $result = mysqli_query($this->conn, $query);
         $temp = array();
@@ -35,6 +36,7 @@ class Get
         }
         return $temp;
     }
+
      public function Recent_Admin(){
       $query =  "SELECT * FROM admin ORDER BY createdate DESC limit 3";
       $result = mysqli_query($this->conn, $query);
@@ -52,7 +54,47 @@ class Get
         $result = mysqli_query($this->conn, $query);
         $temp = array();
         while ($row = $result->fetch_assoc()) {
+            if($row['isActive']!=0){
             $temp[] = $row;
+            }
+        }
+        return $temp;
+    }
+   
+
+    public function Select_Recent_User(){
+        $query = "SELECT * FROM users ORDER BY Creation_Date DESC limit 3";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            $temp[] = $row;
+        }
+        return $temp;
+    }
+
+    public function Select_Total_Count(){
+        // user
+        $query1 = "SELECT * FROM users";
+        $result = mysqli_query($this->conn, $query1);
+        $User = mysqli_num_rows($result);
+        // admin
+        $query2 = "SELECT * FROM admin";
+        $result = mysqli_query($this->conn, $query2);
+        $Admin = mysqli_num_rows($result);
+        $Share_Temp=100;
+        $obj=[$Admin,$User,$Share_Temp];
+        $fin = json_encode($obj);
+        return  $fin ;
+    }
+
+    public function blocked_User(){
+        $query = "SELECT * FROM users ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            if($row['isActive']!=1){
+            $temp[] = $row;
+            }
         }
         return $temp;
     }

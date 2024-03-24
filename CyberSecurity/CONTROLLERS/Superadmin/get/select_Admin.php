@@ -7,5 +7,4 @@ $data = json_decode(file_get_contents('php://input'));
 $obj = new Get();
 $result = $obj->select_Admin();
 echo json_encode($result);
-
 ?>
