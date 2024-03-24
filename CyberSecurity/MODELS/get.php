@@ -15,11 +15,15 @@ class Get
 
     public function select_Admin(){
         $query = "SELECT * FROM admin ";
+        $current_date = date('Y-m-d');
+
         $result = mysqli_query($this->conn, $query);
         $temp = array();
         while ($row = $result->fetch_assoc()) {
             if($row['active']!=0){
-            $temp[] = $row;
+                if($row['Expiry']>$current_date){
+                  $temp[] = $row;
+                }
             }
         }
         return $temp;
@@ -36,13 +40,28 @@ class Get
         }
         return $temp;
     }
+<<<<<<< Updated upstream
 
+=======
+     public function Expired_Admin(){
+        $query = "SELECT * FROM admin";
+        $current_date = date('Y-m-d');
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+            if($row['Expiry']<$current_date){
+            $temp[] = $row;
+            }
+        }
+        return $temp;
+    }
+>>>>>>> Stashed changes
      public function Recent_Admin(){
       $query =  "SELECT * FROM admin ORDER BY createdate DESC limit 3";
       $result = mysqli_query($this->conn, $query);
          $temp = array();
         while ($row = $result->fetch_assoc()) {
-            if($row['active']!=1){
+            if($row['active']!=0){
             $temp[] = $row;
             }
         }
