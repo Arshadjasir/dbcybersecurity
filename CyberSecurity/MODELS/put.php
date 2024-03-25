@@ -84,5 +84,28 @@ class Put
     }
   }
 
+<<<<<<< Updated upstream
+=======
+  public function admin_Change_Pass($id, $Name, $Mail, $oldPassword, $newPassword, $confirmPassword){
+    
+    $get = "SELECT * FROM users WHERE Password='$oldPassword'";
+    $getres = mysqli_query($this->conn, $get);
+    if(mysqli_num_rows($getres) ==1){ 
+        if($newPassword === $confirmPassword){
+            $query = "UPDATE users SET Name='$Name', Mail='$Mail', Password='$newPassword' WHERE password='$oldPassword'";
+            $result = mysqli_query($this->conn, $query);
+            if($result){
+                return "Success";
+            } else {
+                return "Error updating password";
+            }
+        } else {
+            return "New password and confirm password do not match";
+        }
+    } else {
+        return "Incorrect old password";
+    }
+}
+>>>>>>> Stashed changes
 }
 ?>
