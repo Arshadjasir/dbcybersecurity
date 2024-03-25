@@ -14,6 +14,25 @@ class Put
   }
 
 
+  public function SuperAdmin_Passchange($old,$New){
+     $query = "SELECT * FROM superadmin WHERE Mail='superadmin@gmail.com'";
+        $result = mysqli_query($this->conn, $query);
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $stored_password = $row['Password'];
+            if ($old === $stored_password) {
+                $query = "UPDATE superadmin set Password = '$New' where Mail ='superadmin@gmail.com'";
+                if (mysqli_query($this->conn, $query)) {
+                 return "Success";
+                }
+            } else {
+                return "Decline";
+            }
+        } else {
+            return 'Decline';
+       }
+
+  }
 
   public function update_Admin($id,$Name,$Mail,$Password,$Expiry){
     $get = "Select * from admin where Mail = '$Mail'";
