@@ -1,7 +1,6 @@
 <?php
 include_once '../../../config/database.php';
 
-
 class Get
 {
     public $conn;
@@ -12,6 +11,28 @@ class Get
         $db = new Database();
         $this->conn = $db->connect();
     }
+    public function admin_login($Mail,$Password){
+        $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+        $current_date = date('Y-m-d');  
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $stored_password = $row['Password'];
+            $Expiry = $row['Expiry'];
+            if($row['Expiry']>$current_date){
+            if ($Password === $stored_password) {
+                return "Success";
+            } else {
+                return "Decline";
+            }
+            }else{
+                return "Expired";
+            }
+        } else {
+            return 'Decline';
+    }
+    }
+
 
     public function select_Admin(){
         $query = "SELECT * FROM admin ";
@@ -40,9 +61,6 @@ class Get
         }
         return $temp;
     }
-<<<<<<< Updated upstream
-
-=======
      public function Expired_Admin(){
         $query = "SELECT * FROM admin";
         $current_date = date('Y-m-d');
@@ -55,7 +73,6 @@ class Get
         }
         return $temp;
     }
->>>>>>> Stashed changes
      public function Recent_Admin(){
       $query =  "SELECT * FROM admin ORDER BY createdate DESC limit 3";
       $result = mysqli_query($this->conn, $query);
