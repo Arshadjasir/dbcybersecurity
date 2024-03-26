@@ -11,34 +11,11 @@ class Get
         $db = new Database();
         $this->conn = $db->connect();
     }
-<<<<<<< Updated upstream
-=======
-    public function admin_login($Mail,$Password){
-        $query = "SELECT * FROM admin WHERE Mail='$Mail'";
-        $result = mysqli_query($this->conn, $query);
-        $current_date = date('Y-m-d');  
-        if (mysqli_num_rows($result) == 1) {
-            $row = mysqli_fetch_assoc($result);
-            $stored_password = $row['Password'];
-            $Expiry = $row['Expiry'];
-            if($row['Expiry']>$current_date){
-            if ($Password === $stored_password) {
-                return "Success";
-            } else {
-                return "Decline";
-            }
-            }else{
-                return "Expired";
-            }
-        } else {
-            return 'Decline';
-    }
-    }
  
      public function Superadmin_login($Mail,$Password){
         $query = "SELECT * FROM superadmin WHERE Mail='$Mail'";
         $result = mysqli_query($this->conn, $query);
-         if (mysqli_num_rows($result) == 1) {
+        if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
         $stored_password = $row['Password'];
         if ($Password === $stored_password) {
@@ -50,6 +27,24 @@ class Get
                 return "Decline";
             }
         }
+    public function Superadmin_forgot_pass($Mail){
+        $query = "SELECT * FROM superadmin WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+         if (mysqli_num_rows($result) == 1) {
+            return "Success";
+         }else{
+            return "Decline";
+         }
+     }
+    public function Superadmin_otp($otp){
+        $Myotp = 123456;
+        if($otp==$Myotp){   
+            return "Success";
+        }else{
+            return "Decline";
+        }
+     }
+
 
    public function Superadmin_Mail_View(){
         $query = "SELECT * FROM superadmin WHERE Mail='superadmin@gmail.com'";
@@ -62,7 +57,6 @@ class Get
              return $val;
       }
    }
->>>>>>> Stashed changes
 
     public function select_Admin(){
         $query = "SELECT * FROM admin ";
@@ -151,9 +145,8 @@ class Get
         $result = mysqli_query($this->conn, $query2);
         $Admin = mysqli_num_rows($result);
         $Share_Temp=100;
-        $obj=[$Admin,$User,$Share_Temp];
-        $fin = json_encode($obj);
-        return  $fin ;
+        $val = ["Admins" => $Admin, "Users" => $User,"Shared" =>$Share_Temp];
+        return  $val ;
     }
 
 

@@ -33,6 +33,22 @@ class Put
        }
 
   }
+  public function SuperAdmin_Forgot($Email,$confirmpass){
+     $query = "SELECT * FROM superadmin WHERE Mail='$Email'";
+     $result = mysqli_query($this->conn, $query);
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $que = "UPDATE superadmin set Password = '$confirmpass' where Mail ='$Email'";
+                if (mysqli_query($this->conn, $que)) {
+                 return "Success";
+                }else{
+                  return "Decline";
+                }
+        } else {
+            return 'Decline';
+       }
+
+  }
 
   public function update_Admin($id,$Name,$Mail,$Password,$Expiry){
     $get = "Select * from admin where Mail = '$Mail'";
@@ -103,8 +119,6 @@ class Put
     }
   }
 
-<<<<<<< Updated upstream
-=======
   public function admin_Change_Pass($id, $Name, $Mail, $oldPassword, $newPassword, $confirmPassword){
     
     $get = "SELECT * FROM users WHERE Password='$oldPassword'";
@@ -125,6 +139,5 @@ class Put
         return "Incorrect old password";
     }
 }
->>>>>>> Stashed changes
 }
 ?>
