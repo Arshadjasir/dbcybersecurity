@@ -14,14 +14,14 @@ class Put
   }
 
 
-  public function SuperAdmin_Passchange($old,$New){
-     $query = "SELECT * FROM superadmin WHERE Mail='superadmin@gmail.com'";
+  public function SuperAdmin_Passchange($Email,$old,$New){
+     $query = "SELECT * FROM superadmin WHERE Mail='$Email'";
         $result = mysqli_query($this->conn, $query);
         if (mysqli_num_rows($result) == 1) {
             $row = mysqli_fetch_assoc($result);
             $stored_password = $row['Password'];
             if ($old === $stored_password) {
-                $query = "UPDATE superadmin set Password = '$New' where Mail ='superadmin@gmail.com'";
+                $query = "UPDATE superadmin set Password = '$New' where Mail ='$Email'";
                 if (mysqli_query($this->conn, $query)) {
                  return "Success";
                 }
