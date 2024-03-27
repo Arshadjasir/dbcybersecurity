@@ -85,6 +85,22 @@ class Put
 
 
   ///////////////////////// Admin ////////////////////////////////
+   public function Admin_Forgot($Email,$confirmpass){
+     $query = "SELECT * FROM admin WHERE Mail='$Email'";
+     $result = mysqli_query($this->conn, $query);
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $que = "UPDATE admin set Password = '$confirmpass' where Mail ='$Email'";
+                if (mysqli_query($this->conn, $que)) {
+                 return "Success";
+                }else{
+                  return "Decline";
+                }
+        } else {
+            return 'Decline';
+       }
+
+  }
 
   public function update_User($id,$Name,$User,$Mail,$Password,$Whatsapp,$Facebook,$Instagram){
     $get = "Select * from users where Mail='$Mail'";
@@ -119,25 +135,24 @@ class Put
     }
   }
 
-  public function admin_Change_Pass($id, $Name, $Mail, $oldPassword, $newPassword, $confirmPassword){
-    
-    $get = "SELECT * FROM users WHERE Password='$oldPassword'";
-    $getres = mysqli_query($this->conn, $get);
-    if(mysqli_num_rows($getres) ==1){ 
-        if($newPassword === $confirmPassword){
-            $query = "UPDATE users SET Name='$Name', Mail='$Mail', Password='$newPassword' WHERE password='$oldPassword'";
-            $result = mysqli_query($this->conn, $query);
-            if($result){
-                return "Success";
+  public function Admin_Passchange($Email,$old,$New){
+     $query = "SELECT * FROM admin WHERE Mail='$Email'";
+        $result = mysqli_query($this->conn, $query);
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $stored_password = $row['Password'];
+            if ($old === $stored_password) {
+                $query = "UPDATE admin set Password = '$New' where Mail ='$Email'";
+                if (mysqli_query($this->conn, $query)) {
+                 return "Success";
+                }
             } else {
-                return "Error updating password";
+                return "Decline";
             }
         } else {
-            return "New password and confirm password do not match";
-        }
-    } else {
-        return "Incorrect old password";
-    }
-}
+            return 'Decline';
+       }
+
+  }
 }
 ?>

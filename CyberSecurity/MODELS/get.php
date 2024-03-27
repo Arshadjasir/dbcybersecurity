@@ -184,7 +184,37 @@ class Get
             return 'Decline';
         }
     }
+  
+     public function Admin_forgot_pass($Mail){
+        $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+         if (mysqli_num_rows($result) == 1) {
+            return "Success";
+         }else{
+            return "Decline";
+         }
+     }
 
+      public function Admin_otp($otp){
+        $Myotp = 123456;
+        if($otp==$Myotp){   
+            return "Success";
+        }else{
+            return "Decline";
+        }
+     }
+     public function Admin_Mail_View($Email){
+        $query = "SELECT * FROM admin WHERE Mail='$Email'";
+        $result = mysqli_query($this->conn, $query);
+     if (mysqli_num_rows($result) == 1) {
+             $row = mysqli_fetch_assoc($result);
+             $mail=$row['Mail'];
+             $password = $row['Password'];
+             $val = ["Mail" => $mail, "Password" => $password];
+             return $val;
+      }
+   }
+    
     //////////////// user
 
     public function user_login($Mail,$Password){

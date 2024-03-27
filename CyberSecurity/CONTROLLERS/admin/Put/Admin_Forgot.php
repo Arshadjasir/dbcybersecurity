@@ -4,6 +4,6 @@ include_once '../../../models/put.php';
 
 $data = json_decode(file_get_contents('php://input')); 
 $obj = new Put();
-$result = $obj->admin_Change_Pass($data->Name,$data->Mail,$data->Password,$data->oldPassword,$data->newPassword,$data->confirmPassword);
+$result = $obj->Admin_Forgot($data->Email,$data->confirmpass);
 echo json_encode($result);
 ?>
