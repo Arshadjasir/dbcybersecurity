@@ -232,7 +232,56 @@ class Get
         else {
             return 'Decline';
         }
-}
+    }
+
+    public function user_forgot_pass($Mail){
+        $query = "SELECT * FROM users WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+         if (mysqli_num_rows($result) == 1) {
+            return "Success";
+         }else{
+            return "Decline";
+         }
+     }
+
+      public function user_otp($otp){
+        $Myotp = 123456;
+        if($otp==$Myotp){   
+            return "Success";
+        }else{
+            return "Decline";
+        }
+     }
+     
+    public function user_Mail_View($Email){
+        $query = "SELECT * FROM users WHERE Mail='$Email'";
+        $result = mysqli_query($this->conn, $query);
+        if(mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $mail=$row['Mail'];
+            $password = $row['Password'];
+            $val = ["Mail" => $mail, "Password" => $password];
+            return $val;
+        }
+    }
+
+    public function user_profile($Email){
+        $query = "SELECT * FROM users WHERE Mail='$Email'";
+        $result = mysqli_query($this->conn, $query);
+        if(mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $mail=$row['Mail'];
+            $password = $row['Password'];
+            $instagram = $row['Instagram'];
+            $facebook = $row['Facebook'];
+            $whatsapp = $row['Whatsapp'];
+            $Name = $row['Name'];
+         
+
+            $val = ["Name"=>$Name,"Mail" => $mail, "Password" => $password,"Whatsapp" => $whatsapp,"Facebook" => $facebook,"Instagram" => $instagram];
+            return $val;
+        }
+    }
 }
 
 ?>
