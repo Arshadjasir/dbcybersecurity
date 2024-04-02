@@ -5,6 +5,6 @@ include_once '../../../models/post.php';
 
 $data = json_decode(file_get_contents('php://input')); 
 $obj = new Post();
-$result = $obj->insert_Admin($data->Name,$data->Mail,$data->Password,$data->Expiry,$data->active);
-echo json_encode($result);
+$result = $obj->insert_Admin($data->Name,$data->Mail,$data->Password,$data->Expiry,$data->active,$data->Companyname);
+echo json_encode($result); 
 ?>

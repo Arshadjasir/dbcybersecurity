@@ -20,7 +20,7 @@ class Put
             $row = mysqli_fetch_assoc($result);
             $stored_password = $row['Password'];
             if ($old === $stored_password) {
-                $query = "UPDATE superadmin set Password = '$New' where Mail ='superadmin@gmail.com'";
+                $query = "UPDATE superadmin set Password = '$New' where Mail ='$Email'";
                 if (mysqli_query($this->conn, $query)) {
                  return "Success";
                 }
@@ -48,12 +48,29 @@ class Put
        }
   }
 
-  public function update_Admin($id,$Name,$Mail,$Password,$Expiry){
+  public function Renew_Admin($id,$Expiry){
+
+   $get = "Select * from admin where id='$id'";
+    $getresult = mysqli_query($this->conn, $get);
+    while($row=mysqli_fetch_assoc($getresult)){
+     if($Expiry==$row['Expiry']){
+           $new_expiry_date = date('Y-m-d', strtotime($Expiry . ' +1 year'));
+           $queri = "UPDATE admin set Expiry = '$new_expiry_date' where id ='$id'";
+           if (mysqli_query($this->conn, $queri)) {
+            return "Success";
+           }else{
+            return "fail";
+           }
+     }
+ 
+   }}
+
+  public function update_Admin($id,$Name,$Mail,$Password,$Expiry,$Companyname){
     $get = "Select * from admin where Mail = '$Mail'";
     $getresult = mysqli_query($this->conn, $get);
     while ($row = mysqli_fetch_assoc($getresult)) {
       if($id==$row['id']){
-        $query = "UPDATE admin set Name ='$Name', Mail ='$Mail',Password = '$Password', Expiry = '$Expiry' where id ='$id'";
+        $query = "UPDATE admin set Name ='$Name', Mail ='$Mail',Password = '$Password', Expiry = '$Expiry',Companyname = '$Companyname' where id ='$id'";
         if (mysqli_query($this->conn, $query)) {
           return "Success";
         }
@@ -80,6 +97,37 @@ class Put
       return "fail";
     }
   }
+
+   public function Renew_User($id,$Expiry){
+    
+      $get = "Select * from users where id='$id'";
+      $getresult = mysqli_query($this->conn, $get);
+        while($row=mysqli_fetch_assoc($getresult)){
+          
+           if($Expiry==$row['Expiry_video']){
+             $current_date = date('Y-m-d');
+             if($current_date<=$Expiry){
+
+                 $new_expiry_date = date('Y-m-d', strtotime($Expiry . ' +1 year'));
+                 $queri = "UPDATE users set Expiry_video = '$new_expiry_date' where id ='$id'";
+                    if (mysqli_query($this->conn, $queri)) {
+                         return "Success";
+                    }else{
+                         return "fail";
+                    }
+               }else{
+                 $new_expiry_date = date('Y-m-d', strtotime($current_date . ' +1 year'));
+                 $queri = "UPDATE users set Expiry_video = '$new_expiry_date' where id ='$id'";
+                    if (mysqli_query($this->conn, $queri)) {
+                         return "Success";
+                    }else{
+                         return "faill";
+                     }
+              }
+            }
+          }
+        }
+      
 
 
   ///////////////////////// Admin ////////////////////////////////
@@ -125,7 +173,7 @@ class Put
     $getres = mysqli_query($this->conn, $get);
     while($row=mysqli_fetch_assoc($getres)){
       if($id==$row['id']){
-        $query = "UPDATE users set Name='$Name', User='$User',Mail='$Mail',Password='$Password',Whatsapp='$Whatsapp',   Facebook='$Facebook',Instagram='$Instagram' where id ='$id'  ";
+        $query = "UPDATE users set Name='$Name', User='$User',Mail='$Mail',Password='$Password',Whatsapp='$Whatsapp',Facebook='$Facebook',Instagram='$Instagram' where id ='$id'  ";
         $result=mysqli_query($this->conn, $query);
         return "Success";
       } 

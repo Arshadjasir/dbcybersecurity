@@ -74,6 +74,37 @@ class Get
         }
         return $temp;
     }
+   public function Campaign_id(){
+     $query =  "SELECT * FROM campaingn ORDER BY createdate DESC limit 1";
+      $result = mysqli_query($this->conn, $query);
+        while ($row = $result->fetch_assoc()) {
+            return $row['id']+1;
+        }
+    
+   }
+   public function Campaingn_Report(){
+        $query = "SELECT * FROM campaingn ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()){
+                  $temp[] = $row;
+        }
+        return $temp;
+    }
+   
+
+
+
+    public function Users_Details(){
+        $query = "SELECT users.id,users.Name,users.User,users.Mail,users.Whatsapp,users.Facebook,users.Instagram,users.isActive,users.Expiry_video,admin.Name,admin.Companyname FROM users JOIN admin ON users.admin_id = admin.id ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()) {
+                  $temp[] = $row;
+        }
+        return $temp;
+    }
+    
 
     public function blocked_Admin(){
         $query = "SELECT * FROM admin ";
@@ -112,16 +143,42 @@ class Get
         return $temp;
     }
 
-    public function select_User(){
-        $query = "SELECT * FROM users ";
-        $result = mysqli_query($this->conn, $query);
-        $temp = array();
-        while ($row = $result->fetch_assoc()) {
-            if($row['isActive']!=0){
-            $temp[] = $row;
-            }
+    public function select_User($Mail){
+         $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+         $result = mysqli_query($this->conn, $query);  
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $adminid = $row['id'];
+                $userquery = "SELECT * from users";
+                $res = mysqli_query($this->conn, $userquery);
+                $temp = array();
+                while ($userrow = $res->fetch_assoc()) {
+                  if($userrow['isActive']!=0){
+                    if($userrow['admin_id']==$adminid){
+                      $temp[] = $userrow;
+                    }
+                  }
+                }
+         return $temp;
         }
-        return $temp;
+    //   $adminquery = "SELECT * FROM admin WHERE Mail='$Mail";
+    //   $res = mysqli_query($this->conn, $adminquery);
+    //     if (mysqli_num_rows($res) == 1) {
+    //         return true;
+    //     }
+        //   $adminrow = mysqli_fetch_assoc($res);
+        //   $adminid=$adminrow['id'];
+        //   $query = "SELECT * from users";
+        //   $result = mysqli_query($this->conn, $query);
+        //   $temp = array();
+        //   while ($row = $result->fetch_assoc()) {
+        //       if($row['isActive']!=0){
+        //         if($row['id']==$adminid)
+        //          $temp[] = $row;
+        //       }
+        //     }
+        //     return $temp;
+        
     }
    
 
@@ -204,15 +261,29 @@ class Get
             return "Decline";
         }
      }
-     public function Admin_Mail_View($Email){
+    public function Admin_Mail_View($Email){
         $query = "SELECT * FROM admin WHERE Mail='$Email'";
         $result = mysqli_query($this->conn, $query);
-     if (mysqli_num_rows($result) == 1) {
+       if (mysqli_num_rows($result) == 1) {
              $row = mysqli_fetch_assoc($result);
              $mail=$row['Mail'];
              $password = $row['Password'];
              $val = ["Mail" => $mail, "Password" => $password];
              return $val;
+      }
+   }
+
+    public function Admin_company($Email){
+        $query = "SELECT * FROM admin WHERE Mail='$Email'";
+        $result = mysqli_query($this->conn, $query);
+       if (mysqli_num_rows($result) == 1) {
+             $row = mysqli_fetch_assoc($result);
+             $companyname=$row['Companyname'];
+             $Adminid=$row['id'];
+             $val = ["Companyname" => $companyname, "id" => $Adminid];
+             return $val;
+      }else{
+        return "no data";
       }
    }
     
