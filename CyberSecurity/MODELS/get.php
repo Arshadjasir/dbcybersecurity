@@ -36,6 +36,7 @@ class Get
             return "Decline";
          }
      }
+
     public function Superadmin_otp($otp){
         $Myotp = 123456;
         if($otp==$Myotp){   
@@ -46,12 +47,12 @@ class Get
      }
 
 
-   public function Superadmin_Mail_View(){
-        $query = "SELECT * FROM superadmin WHERE Mail='superadmin@gmail.com'";
+   public function Superadmin_Mail_View($Mail){
+        $query = "SELECT * FROM superadmin WHERE Mail='$Mail'";
         $result = mysqli_query($this->conn, $query);
      if (mysqli_num_rows($result) == 1) {
              $row = mysqli_fetch_assoc($result);
-             $mail=$row['Mail'];
+             $Mail=$row['Mail'];
              $password = $row['Password'];
              $val = ["Mail" => $mail, "Password" => $password];
              return $val;
@@ -282,6 +283,22 @@ class Get
             return $val;
         }
     }
-}
 
+    public function Select_videos(){
+        $sql = "SELECT * FROM videos";
+        $result = mysqli_query($this->conn, $sql);
+        
+        if ($result->num_rows > 0) {
+          $videos = array();
+          while($row = $result->fetch_assoc()) {
+            $videos[] = $row;
+          }
+          return $videos; // Output JSON response
+        } else {
+          return "No videos found";
+        }
+    }
+
+
+}
 ?>

@@ -30,8 +30,8 @@ class Put
         } else {
             return 'Decline';
        }
-
   }
+
   public function SuperAdmin_Forgot($Email,$confirmpass){
      $query = "SELECT * FROM superadmin WHERE Mail='$Email'";
      $result = mysqli_query($this->conn, $query);
@@ -46,7 +46,6 @@ class Put
         } else {
             return 'Decline';
        }
-
   }
 
   public function update_Admin($id,$Name,$Mail,$Password,$Expiry){
@@ -206,8 +205,6 @@ public function update_profile($mail,$whatsapp,$facebook,$instagram){
       return "decline";
     }
   }
-}
-
-  
+} 
 }
 ?>
