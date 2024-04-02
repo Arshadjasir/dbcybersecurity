@@ -5,6 +5,6 @@ include_once '../../../models/get.php';
 
 $data = json_decode(file_get_contents('php://input')); 
 $obj = new Get();
-$result = $obj->Superadmin_Mail_View($data->Mail); 
+$result = $obj->Report_Datas($data->id);
 echo json_encode($result);
 ?>

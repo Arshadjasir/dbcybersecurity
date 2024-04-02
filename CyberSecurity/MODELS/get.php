@@ -54,7 +54,7 @@ class Get
              $row = mysqli_fetch_assoc($result);
              $Mail=$row['Mail'];
              $password = $row['Password'];
-             $val = ["Mail" => $mail, "Password" => $password];
+             $val = ["Mail" => $Mail, "Password" => $password];
              return $val;
       }
    }
@@ -83,7 +83,7 @@ class Get
     
    }
    public function Campaingn_Report(){
-        $query = "SELECT * FROM campaingn ";
+      $query = "SELECT campaingn.id,campaingn.No_of_Users,campaingn.Campaingn_Name,campaingn.Type,campaingn.createdate,admin.Name FROM campaingn JOIN admin ON campaingn.Admin_id = admin.id ";
         $result = mysqli_query($this->conn, $query);
         $temp = array();
         while ($row = $result->fetch_assoc()){
@@ -91,10 +91,23 @@ class Get
         }
         return $temp;
     }
+      public function Report_Datas($cam_id){
+        $query = "Select * from senddata where Campain_id = '$cam_id'";
+        // $query = "SELECT users.Name,users.User,users.Mail,users.Whatsapp,users.Facebook,users.Instagram FROM users JOIN users ON users.id = senddata.user_id ";
+        $result = mysqli_query($this->conn, $query);
+        $temp = array();
+        while ($row = $result->fetch_assoc()){
+             $user_id = $row['user_id']; // Assuming user_id is the field in senddata table
+             $user_query = "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram FROM users WHERE User = '$user_id'";
+             $user_result = mysqli_query($this->conn, $user_query);
+              while ($user_row = $user_result->fetch_assoc()){
+                 $temp[] = $user_row;
+              }
+
+        }
+        return $temp;
+    }
    
-
-
-
     public function Users_Details(){
         $query = "SELECT users.id,users.Name,users.User,users.Mail,users.Whatsapp,users.Facebook,users.Instagram,users.isActive,users.Expiry_video,admin.Name,admin.Companyname FROM users JOIN admin ON users.admin_id = admin.id ";
         $result = mysqli_query($this->conn, $query);

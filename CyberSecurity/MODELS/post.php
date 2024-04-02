@@ -42,9 +42,7 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
             $Campaingn_id =  $row['id']+1;
          }
         if (mysqli_num_rows($result) == 1) {
-            try {
-                //code...
-           
+            try {     
             $row = mysqli_fetch_assoc($result);
             $Admin_id = $row['id'];
             $insert = "insert into campaingn (id,No_of_Users,Campaingn_Name,Type,Admin_id) values ('$Campaingn_id','$userlength','$Campaingn_name','$Campaingn_Type ','$Admin_id') ";
@@ -52,19 +50,17 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
 
             foreach ($Sendlink as $send ) {   
             $userid = $send->{'User'};
-            // $userName = $send->{'Name'};
-            // $userMail = $send->{'Mail'};
             $ins = "insert into senddata (Campain_id,user_id) values ('$Campaingn_id','$userid') ";
             $fin = mysqli_query($this->conn, $ins);
-             return "success";
             }
-             } catch (\Throwable $th) {
+            } catch (\Throwable $th) {
                 throw $th;
             }
+             return "success";
              } else{
                 return "not";
              }  
-             
+
 }
 
 
