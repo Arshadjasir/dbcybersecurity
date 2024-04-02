@@ -5,6 +5,7 @@ include_once '../../../models/get.php';
 
 $data = json_decode(file_get_contents('php://input')); 
 $obj = new Get();
-$result = $obj->select_User($data->Mail);
+$result = $obj->Campaign_id();
 echo json_encode($result);
+
 ?>
