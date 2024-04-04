@@ -309,6 +309,21 @@ class Get
         return "no data";
       }
    }
+
+   public function Admin_Select_Videos(){
+    $sql = "SELECT * FROM videos";
+    $result = mysqli_query($this->conn, $sql);
+    
+    if ($result->num_rows > 0) {
+      $videos = array();
+      while($row = $result->fetch_assoc()) {
+        $videos[] = $row;
+      }
+      return $videos; // Output JSON response
+    } else {
+      return "No videos found";
+    }
+    }
     
     //////////////// user
 
@@ -380,7 +395,6 @@ class Get
     }
 
     public function Select_videos($Mail){
-
         $query = "SELECT * FROM users WHERE Mail='$Mail'";
         $result = mysqli_query($this->conn, $query);
         $current_date = date('Y-m-d'); 
@@ -422,7 +436,6 @@ class Get
                 }
 
                  return $videos;
-
              }
       }
     }
