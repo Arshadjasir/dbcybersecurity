@@ -35,6 +35,8 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
         $Campaingn_id = "";
         $Campaingn_name = $Campaingn->{'Campaingn'};
         $Campaingn_Type = $Campaingn->{'Type'};
+        $Campaingn_Mail = $Campaingn->{'link'};
+        $Campaingn_File = $Campaingn->{'file'};
         // $current_date = date('Y-m-d');  
          $que =  "SELECT * FROM campaingn ORDER BY createdate DESC limit 1";
          $res = mysqli_query($this->conn, $que);
@@ -47,11 +49,38 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
             $Admin_id = $row['id'];
             $insert = "insert into campaingn (id,No_of_Users,Campaingn_Name,Type,Admin_id) values ('$Campaingn_id','$userlength','$Campaingn_name','$Campaingn_Type ','$Admin_id') ";
             $final = mysqli_query($this->conn, $insert);
-
+             $userid="";
+             $usermail="";
             foreach ($Sendlink as $send ) {   
-            $userid = $send->{'User'};
-            $ins = "insert into senddata (Campain_id,user_id) values ('$Campaingn_id','$userid') ";
-            $fin = mysqli_query($this->conn, $ins);
+              $userid = $send->{'User'};
+              $usermail = $send->{'Mail'};
+              if($Campaingn_File==""){
+              $mailed = mail($usermail, "Your link from Vebbox Software Solution", $Campaingn_Mail);
+              }elseif($Campaingn_File!=""){
+                 $email = $usermail;//Mail
+                 $subject = "Your Link from vebbox software solution";
+                 $content = $Campaingn_Mail;//link
+                 $file_path = $Campaingn_File;//file
+                 $file_content = file_get_contents($file_path);
+                 $attachment = chunk_split(base64_encode($file_content));
+                 $boundary = md5(time());
+                 $headers = "From: your_email@example.com\r\n";
+                 $headers .= "MIME-Version: 1.0\r\n";
+                 $headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"\r\n";
+                 $message = "--$boundary\r\n";
+                 $message .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
+                 $message .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+                 $message .= $content."\r\n\r\n";
+                 $message .= "--$boundary\r\n";
+                 $message .= "Content-Type: application/pdf; name=\"attachment.pdf\"\r\n";
+                 $message .= "Content-Disposition: attachment; filename=\"attachment.pdf\"\r\n";
+                 $message .= "Content-Transfer-Encoding: base64\r\n\r\n";
+                 $message .= $attachment."\r\n\r\n";
+                 $message .= "--$boundary--";
+                 $mailed = mail($email, $subject, $message, $headers);
+              }
+              $ins = "insert into senddata (Campain_id,user_id) values ('$Campaingn_id','$userid') ";
+              $fin = mysqli_query($this->conn, $ins);
             }
             } catch (\Throwable $th) {
                 throw $th;

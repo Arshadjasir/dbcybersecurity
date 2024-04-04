@@ -374,28 +374,58 @@ class Get
             $facebook = $row['Facebook'];
             $whatsapp = $row['Whatsapp'];
             $Name = $row['Name'];
-         
-
             $val = ["Name"=>$Name,"Mail" => $mail, "Password" => $password,"Whatsapp" => $whatsapp,"Facebook" => $facebook,"Instagram" => $instagram];
             return $val;
         }
     }
 
-    public function Select_videos(){
-        $sql = "SELECT * FROM videos";
-        $result = mysqli_query($this->conn, $sql);
-        
-        if ($result->num_rows > 0) {
-          $videos = array();
-          while($row = $result->fetch_assoc()) {
-            $videos[] = $row;
-          }
-          return $videos; // Output JSON response
-        } else {
-          return "No videos found";
-        }
-    }
+    public function Select_videos($Mail){
 
+        $query = "SELECT * FROM users WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+        $current_date = date('Y-m-d'); 
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $Expiry = $row['Expiry_video'];
+            if($row['Expiry_video']>$current_date){
+                  $sql = "SELECT * FROM videos";
+                  $res = mysqli_query($this->conn, $sql); 
+                  if ($res->num_rows > 0) {
+                       $videos = array();
+                          while($row = $res->fetch_assoc()) {
+                              $videos[] = $row;
+                          }
+                         return $videos; 
+                  }
+             }else {
+               $sql = "SELECT * FROM videos";
+               $res = mysqli_query($this->conn, $sql);
+               $videos = array();
+                 if ($res) {
+                     while ($row = $res->fetch_assoc()) {
+                     $session = $row['session'];
+                     $query = "SELECT ";
+                     $query .= ($session == 1) ? "*" : "poster, session";
+                     $query .= " FROM videos WHERE session = $session";
+                     $result = mysqli_query($this->conn, $query);
+        
+                     if ($result) {
+                         while ($rows = $result->fetch_assoc()) {
+                         $videos[] = $rows;
+                     }
+                     } else {
+                     echo "Error executing inner query: " . mysqli_error($this->conn);
+                    }
+                 }
+                 } else {
+                 echo "Error executing outer query: " . mysqli_error($this->conn);
+                }
+
+                 return $videos;
+
+             }
+      }
+    }
 
 }
 ?>
