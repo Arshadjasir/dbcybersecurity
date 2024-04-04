@@ -32,6 +32,25 @@ class Put
        }
   }
 
+  public function SuperAdmin_forgot_pass($Mail){
+    $current_time = date("H:i:s");
+    $otp = mt_rand(100000, 999999);
+    $query = "UPDATE superadmin SET otp='$otp', time='$current_time' WHERE Mail='$Mail'";
+    $result = mysqli_query($this->conn, $query);
+    
+    if ($result) {
+      // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+    // if ($mailed) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+    return "Success";
+    } else {
+      return "Decline";
+   }
+}
+
   public function SuperAdmin_Forgot($Email,$confirmpass){
      $query = "SELECT * FROM superadmin WHERE Mail='$Email'";
      $result = mysqli_query($this->conn, $query);
@@ -131,6 +150,25 @@ class Put
 
 
   ///////////////////////// Admin ////////////////////////////////
+  public function Admin_forgot_pass($Mail){
+    $current_time = date("H:i:s");
+    $otp = mt_rand(100000, 999999);
+    $query = "UPDATE admin SET otp='$otp', time='$current_time' WHERE Mail='$Mail'";
+    $result = mysqli_query($this->conn, $query);
+    
+    if ($result) {
+      // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+    // if ($mailed) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+    return "Success";
+    } else {
+      return "Decline";
+   }
+}
+
   public function Admin_Forgot($Email,$confirmpass){
     $query = "SELECT * FROM admin WHERE Mail='$Email'";
     $result = mysqli_query($this->conn, $query);
@@ -201,6 +239,31 @@ class Put
     }
   }
 
+  public function Admin_update_otp($Mail) {
+    $current_time = date("H:i:s");
+    $otp = mt_rand(100000, 999999);
+
+    // $select = "SELECT * FROM admin LIMIT 1"; 
+    // $selectQuery = mysqli_query($this->conn, $select);
+    // $row = mysqli_fetch_assoc($selectQuery);
+    // $email = $row['Email'];
+
+    $query = "UPDATE admin SET otp='$otp', time='$current_time' WHERE Mail='$Mail'";
+    $result = mysqli_query($this->conn, $query);
+    
+    if ($result) {
+        $mailed = mail($email, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");
+        if ($mailed) {
+            return "Success";
+        } else {
+          return "Decline";
+        }
+    } else {
+        return false;
+    }
+}
+
+
   /////////user
 
   public function user_Passchange($Mail,$old,$New){
@@ -254,5 +317,27 @@ public function update_profile($mail,$whatsapp,$facebook,$instagram){
     }
   }
 } 
+
+public function user_forgot_pass($Mail){
+  $current_time = date("H:i:s");
+  $otp = mt_rand(100000, 999999);
+  $query = "UPDATE users SET otp='$otp', time='$current_time' WHERE Mail='$Mail'";
+  $result = mysqli_query($this->conn, $query);
+  
+  if ($result) {
+    // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+  // if ($mailed) {
+  //   return true;
+  // } else {
+  //   return false;
+  // }
+  return "Success";
+  } else {
+    return "Decline";
+ }
 }
+
+}
+
+
 ?>

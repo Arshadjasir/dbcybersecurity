@@ -27,22 +27,26 @@ class Get
                 return "Decline";
             }
         }
-    public function Superadmin_forgot_pass($Mail){
-        $query = "SELECT * FROM superadmin WHERE Mail='$Mail'";
-        $result = mysqli_query($this->conn, $query);
-         if (mysqli_num_rows($result) == 1) {
-            return "Success";
-         }else{
-            return "Decline";
-         }
-     }
+
 
     public function Superadmin_otp($otp){
-        $Myotp = 123456;
-        if($otp==$Myotp){   
-            return "Success";
-        }else{
-            return "Decline";
+        $string = $otp;
+        $query = "SELECT * FROM superadmin WHERE otp = '$string'";
+        $result = mysqli_query($this->conn, $query);
+        
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $otpTime = strtotime($row['time']);
+            $currentTime = strtotime("now");
+            $fiveMinutesLater = strtotime("+5 minutes", $otpTime); 
+    
+            if ($currentTime <= $fiveMinutesLater) {
+                return "Success"; 
+            } else {
+                return "Decline"; 
+            }
+        } else {
+            return "Decline"; 
         }
      }
 
@@ -74,6 +78,8 @@ class Get
         }
         return $temp;
     }
+
+   
    public function Campaign_id(){
      $query =  "SELECT * FROM campaingn ORDER BY createdate DESC limit 1";
       $result = mysqli_query($this->conn, $query);
@@ -256,24 +262,28 @@ class Get
         }
     }
   
-     public function Admin_forgot_pass($Mail){
-        $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+      public function Admin_otp($otp){
+        $string = $otp;
+        $query = "SELECT * FROM admin WHERE otp = '$string'";
         $result = mysqli_query($this->conn, $query);
-         if (mysqli_num_rows($result) == 1) {
-            return "Success";
-         }else{
-            return "Decline";
-         }
+        
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $otpTime = strtotime($row['time']);
+            $currentTime = strtotime("now");
+            $fiveMinutesLater = strtotime("+5 minutes", $otpTime); 
+    
+            if ($currentTime <= $fiveMinutesLater) {
+                return "Success"; 
+            } else {
+                return "Decline"; 
+            }
+        } else {
+            return "Decline"; 
+        }
+
      }
 
-      public function Admin_otp($otp){
-        $Myotp = 123456;
-        if($otp==$Myotp){   
-            return "Success";
-        }else{
-            return "Decline";
-        }
-     }
     public function Admin_Mail_View($Email){
         $query = "SELECT * FROM admin WHERE Mail='$Email'";
         $result = mysqli_query($this->conn, $query);
@@ -319,22 +329,25 @@ class Get
         }
     }
 
-    public function user_forgot_pass($Mail){
-        $query = "SELECT * FROM users WHERE Mail='$Mail'";
-        $result = mysqli_query($this->conn, $query);
-         if (mysqli_num_rows($result) == 1) {
-            return "Success";
-         }else{
-            return "Decline";
-         }
-     }
 
       public function user_otp($otp){
-        $Myotp = 123456;
-        if($otp==$Myotp){   
-            return "Success";
-        }else{
-            return "Decline";
+        $string = $otp;
+        $query = "SELECT * FROM users WHERE otp = '$string'";
+        $result = mysqli_query($this->conn, $query);
+        
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $otpTime = strtotime($row['time']);
+            $currentTime = strtotime("now");
+            $fiveMinutesLater = strtotime("+5 minutes", $otpTime); 
+    
+            if ($currentTime <= $fiveMinutesLater) {
+                return "Success"; 
+            } else {
+                return "Decline"; 
+            }
+        } else {
+            return "Decline"; 
         }
      }
      
