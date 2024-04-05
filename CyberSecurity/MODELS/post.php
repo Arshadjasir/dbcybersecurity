@@ -17,8 +17,9 @@ public function insert_Admin($Name,$Mail,$Password,$Expiry,$active,$Companyname)
     try {
      $get = "Select * from admin where Mail = '$Mail'";
     $getresult = mysqli_query($this->conn, $get);
+    $current_date = date('Y-m-d');
     if(mysqli_num_rows($getresult)<=0){
-    $query = "insert into admin (Name,Mail,Password,Expiry,active,Companyname) values ('$Name','$Mail','$Password','$Expiry','$active','$Companyname') ";
+    $query = "insert into admin (Name,Mail,Password,Expiry,active,Companyname,Expiry_video) values ('$Name','$Mail','$Password','$Expiry','$active','$Companyname','$current_date') ";
     $result = mysqli_query($this->conn, $query);
     return "success";
     }else{
@@ -51,15 +52,19 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
             $final = mysqli_query($this->conn, $insert);
              $userid="";
              $usermail="";
+             $linkid="?id=";
+             $linkcam_id="&campaingn_id=";
+             $Campaingn_link="";
             foreach ($Sendlink as $send ) {   
               $userid = $send->{'User'};
               $usermail = $send->{'Mail'};
+              $Campaingn_link = $Campaingn_Mail.$linkid.$userid.$linkcam_id.$Campaingn_id;
               if($Campaingn_File==""){
-              $mailed = mail($usermail, "Your link from Vebbox Software Solution", $Campaingn_Mail);
+              $mailed = mail($usermail, "Your link from Vebbox Software Solution", $Campaingn_link);
               }elseif($Campaingn_File!=""){
                  $email = $usermail;//Mail
                  $subject = "Your Link from vebbox software solution";
-                 $content = $Campaingn_Mail;//link
+                 $content = $Campaingn_link;//link
                  $file_path = $Campaingn_File;//file
                  $file_content = file_get_contents($file_path);
                  $attachment = chunk_split(base64_encode($file_content));
@@ -85,7 +90,8 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email){
             } catch (\Throwable $th) {
                 throw $th;
             }
-             return "success";
+            //  return "success";
+            return $Campaingn_link;
              } else{
                 return "not";
              }  

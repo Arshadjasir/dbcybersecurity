@@ -51,6 +51,36 @@ class Put
    }
 }
 
+ public function Renew_Admin_Videos($id,$Expiry){
+    
+      $get = "Select * from admin where id='$id'";
+      $getresult = mysqli_query($this->conn, $get);
+        while($row=mysqli_fetch_assoc($getresult)){
+          
+           if($Expiry==$row['Expiry_video']){
+             $current_date = date('Y-m-d');
+             if($current_date<=$Expiry){
+
+                 $new_expiry_date = date('Y-m-d', strtotime($Expiry . ' +1 year'));
+                 $queri = "UPDATE admin set Expiry_video = '$new_expiry_date' where id ='$id'";
+                    if (mysqli_query($this->conn, $queri)) {
+                         return "Success";
+                    }else{
+                         return "fail";
+                    }
+               }else{
+                 $new_expiry_date = date('Y-m-d', strtotime($current_date . ' +1 year'));
+                 $queri = "UPDATE admin set Expiry_video = '$new_expiry_date' where id ='$id'";
+                    if (mysqli_query($this->conn, $queri)) {
+                         return "Success";
+                    }else{
+                         return "faill";
+                     }
+              }
+            }
+          }
+        }
+      
   public function SuperAdmin_Forgot($Email,$confirmpass){
      $query = "SELECT * FROM superadmin WHERE Mail='$Email'";
      $result = mysqli_query($this->conn, $query);
@@ -263,7 +293,25 @@ class Put
     }
 }
 
-
+ public function clicked_user($userid,$camid){
+    $query = "select * from senddata where user_id ='$userid'";
+     $result = mysqli_query($this->conn, $query);
+     $temp = array();
+      while ($row = $result->fetch_assoc()){
+         $campaign_id = $row['Campain_id'];
+         $user_id =  $row['user_id'];
+         $temp[] = $row['user_id'];
+        if ($camid == $campaign_id) {
+              $que = "UPDATE senddata set Click = 1 where Campain_id ='$camid' AND user_id ='$userid'";
+              if (mysqli_query($this->conn, $que)) {
+                return "Success";
+               }else{
+                return "decline";
+               }     
+        }
+      }
+         return $temp;
+ }
   /////////user
 
   public function user_Passchange($Mail,$old,$New){

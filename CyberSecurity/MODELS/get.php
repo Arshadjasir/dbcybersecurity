@@ -104,7 +104,10 @@ class Get
         $temp = array();
         while ($row = $result->fetch_assoc()){
              $user_id = $row['user_id']; // Assuming user_id is the field in senddata table
-             $user_query = "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram FROM users WHERE User = '$user_id'";
+             $user_query = "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram FROM users WHERE users.User = '$user_id'";
+
+            // $user_query =  "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram, senddata.Click FROM users JOIN senddata ON users.User = senddata.user_id WHERE users.User='$user_id'";
+           
              $user_result = mysqli_query($this->conn, $user_query);
               while ($user_row = $user_result->fetch_assoc()){
                  $temp[] = $user_row;
@@ -310,19 +313,52 @@ class Get
       }
    }
 
-   public function Admin_Select_Videos(){
-    $sql = "SELECT * FROM videos";
-    $result = mysqli_query($this->conn, $sql);
-    
-    if ($result->num_rows > 0) {
-      $videos = array();
-      while($row = $result->fetch_assoc()) {
-        $videos[] = $row;
+   public function Admin_Select_Videos($Mail){
+      
+        $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+        $current_date = date('Y-m-d'); 
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $Expiry = $row['Expiry_video'];
+            if($row['Expiry_video']>$current_date){
+                  $sql = "SELECT * FROM videos";
+                  $res = mysqli_query($this->conn, $sql); 
+                  if ($res->num_rows > 0) {
+                       $videos = array();
+                          while($row = $res->fetch_assoc()) {
+                              $videos[] = $row;
+                          }
+                         return $videos; 
+                  }
+             }else {
+               $sql = "SELECT * FROM videos";
+               $res = mysqli_query($this->conn, $sql);
+               $videos = array();
+                 if ($res) {
+                     while ($row = $res->fetch_assoc()) {
+                     $session = $row['session'];
+                     $query = "SELECT ";
+                     $query .= ($session == 1) ? "*" : "poster, session";
+                     $query .= " FROM videos WHERE session = $session";
+                     $result = mysqli_query($this->conn, $query);
+        
+                     if ($result) {
+                         while ($rows = $result->fetch_assoc()) {
+                         $videos[] = $rows;
+                     }
+                     } else {
+                     echo "Error executing inner query: " . mysqli_error($this->conn);
+                    }
+                 }
+                 } else {
+                 echo "Error executing outer query: " . mysqli_error($this->conn);
+                }
+
+                 return $videos;
+             }
       }
-      return $videos; // Output JSON response
-    } else {
-      return "No videos found";
-    }
+    
     }
     
     //////////////// user
