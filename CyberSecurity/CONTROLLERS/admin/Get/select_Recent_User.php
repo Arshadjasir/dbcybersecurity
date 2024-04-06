@@ -5,6 +5,6 @@ include_once '../../../models/get.php';
 
 $data = json_decode(file_get_contents('php://input')); 
 $obj = new Get();
-$result = $obj->select_Recent_User();
+$result = $obj->select_Recent_User($data->Mail);
 echo json_encode($result);
 ?>

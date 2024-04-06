@@ -106,15 +106,30 @@ class Get
 
    }
   
-   public function Campaingn_Report(){
-      $query = "SELECT campaingn.id,campaingn.No_of_Users,campaingn.Campaingn_Name,campaingn.Type,campaingn.createdate,admin.Name FROM campaingn JOIN admin ON campaingn.Admin_id = admin.id ";
-        $result = mysqli_query($this->conn, $query);
-        $temp = array();
-        while ($row = $result->fetch_assoc()){
-                  $temp[] = $row;
-        }
-        return $temp;
+   public function Campaingn_Report($Mail){
+    $que = "SELECT * FROM admin WHERE Mail='$Mail'";
+    $res = mysqli_query($this->conn, $que);
+    $Admin_idd = "";  
+    if (mysqli_num_rows($res) == 1) {
+        $rows = mysqli_fetch_assoc($res);
+        $Admin_idd = $rows['id'];
     }
+    $query = "SELECT campaingn.id, campaingn.No_of_Users, campaingn.Campaingn_Name, campaingn.Type, campaingn.createdate, admin.Name 
+              FROM campaingn 
+              JOIN admin ON campaingn.Admin_id = admin.id 
+              WHERE campaingn.Admin_id = ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $Admin_idd);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $temp = array();
+    while ($row = $result->fetch_assoc()){
+        $temp[] = $row;
+    }
+
+    return $temp;
+}
 
     public function Report_Datas($cam_id){
        $query = "SELECT * FROM senddata WHERE Campain_id = '$cam_id'";
@@ -232,14 +247,22 @@ return $temp;
     }
    
 
-    public function Select_Recent_User(){
-        $query = "SELECT * FROM users ORDER BY Creation_Date DESC limit 3";
-        $result = mysqli_query($this->conn, $query);
-        $temp = array();
-        while ($row = $result->fetch_assoc()) {
-            $temp[] = $row;
-        }
+    public function Select_Recent_User($Mail){
+        $que = "SELECT * FROM admin WHERE Mail='$Mail'";
+        $res = mysqli_query($this->conn, $que);
+         $Admin_id = "";  
+         if (mysqli_num_rows($res) == 1) {
+          $rows = mysqli_fetch_assoc($res);
+          $Admin_id = $rows['id'];
+         }
+         $query = "SELECT * FROM users WHERE admin_id = '$Admin_id' ORDER BY Creation_Date DESC LIMIT 3";
+         $result = mysqli_query($this->conn, $query);
+         $temp = array();
+         while ($row = $result->fetch_assoc()) {
+             $temp[] = $row;
+          }
         return $temp;
+
     }
 
 
