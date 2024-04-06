@@ -88,6 +88,24 @@ class Get
         }
     
    }
+   public function  select_Recent_Campaign($Mail){
+    $que = "SELECT * FROM admin WHERE Mail='$Mail'";
+    $res = mysqli_query($this->conn, $que);
+    $Admin_id = "";  
+    if (mysqli_num_rows($res) == 1) {
+     $rows = mysqli_fetch_assoc($res);
+     $Admin_id = $rows['id'];
+    }
+    $query = "SELECT * FROM campaingn WHERE Admin_id = '$Admin_id' ORDER BY createdate DESC LIMIT 2";
+    $result = mysqli_query($this->conn, $query);
+    $temp = array();
+    while ($row = $result->fetch_assoc()) {
+        $temp[] = $row;
+    }
+    return $temp;
+
+   }
+  
    public function Campaingn_Report(){
       $query = "SELECT campaingn.id,campaingn.No_of_Users,campaingn.Campaingn_Name,campaingn.Type,campaingn.createdate,admin.Name FROM campaingn JOIN admin ON campaingn.Admin_id = admin.id ";
         $result = mysqli_query($this->conn, $query);
@@ -97,24 +115,34 @@ class Get
         }
         return $temp;
     }
-      public function Report_Datas($cam_id){
-        $query = "Select * from senddata where Campain_id = '$cam_id'";
-        // $query = "SELECT users.Name,users.User,users.Mail,users.Whatsapp,users.Facebook,users.Instagram FROM users JOIN users ON users.id = senddata.user_id ";
+
+    public function Report_Datas($cam_id){
+       $query = "SELECT * FROM senddata WHERE Campain_id = '$cam_id'";
         $result = mysqli_query($this->conn, $query);
         $temp = array();
-        while ($row = $result->fetch_assoc()){
-             $user_id = $row['user_id']; // Assuming user_id is the field in senddata table
-             $user_query = "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram FROM users WHERE users.User = '$user_id'";
+        if (!$result) {
+              echo "Error: " . mysqli_error($this->conn);
+        } else {
+             while ($row = $result->fetch_assoc()) {
+               $user_id = $row['user_id'];
+                $user_query = "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram, senddata.Click 
+                       FROM users 
+                       JOIN senddata ON users.User = senddata.user_id 
+                       WHERE users.User = '$user_id' AND senddata.Campain_id = '$cam_id'";
 
-            // $user_query =  "SELECT users.Name, users.User, users.Mail, users.Whatsapp, users.Facebook, users.Instagram, senddata.Click FROM users JOIN senddata ON users.User = senddata.user_id WHERE users.User='$user_id'";
-           
-             $user_result = mysqli_query($this->conn, $user_query);
-              while ($user_row = $user_result->fetch_assoc()){
-                 $temp[] = $user_row;
-              }
+                 $user_result = mysqli_query($this->conn, $user_query);
 
+        if (!$user_result) {
+            echo "Error: " . mysqli_error($this->conn);
+        } else {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $temp[] = $user_row;
+            }
         }
-        return $temp;
+    }
+}
+return $temp;
+
     }
    
     public function Users_Details(){
@@ -227,6 +255,26 @@ class Get
         $Share_Temp=100;
         $val = ["Admins" => $Admin, "Users" => $User,"Shared" =>$Share_Temp];
         return  $val ;
+    }
+     public function Select_countfor_admin($Mail){
+         $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+        $result = mysqli_query($this->conn, $query);
+        $Admin_id = "";  
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $Admin_id = $row['id'];
+        }
+        $query1 = "SELECT * FROM users Where admin_id= $Admin_id ";
+        $result = mysqli_query($this->conn, $query1);
+        $User = mysqli_num_rows($result);
+
+        $query2 = "SELECT * FROM campaingn Where Admin_id= $Admin_id ";
+        $result1 = mysqli_query($this->conn, $query2);
+        $campaign = mysqli_num_rows($result1);
+
+        $val = ["campaign" => $campaign, "Users" => $User];
+        return $val;
+    
     }
 
 
