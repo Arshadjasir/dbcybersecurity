@@ -88,6 +88,14 @@ class Get
         }
     
    }
+   public function getuser_id(){
+     $query =  "SELECT * FROM users ORDER BY Creation_Date DESC limit 1";
+      $result = mysqli_query($this->conn, $query);
+        while ($row = $result->fetch_assoc()) {
+            return $row['id']+1;
+        }
+    
+   }
    public function  select_Recent_Campaign($Mail){
     $que = "SELECT * FROM admin WHERE Mail='$Mail'";
     $res = mysqli_query($this->conn, $que);
@@ -226,6 +234,7 @@ return $temp;
                 }
          return $temp;
         }
+        
     //   $adminquery = "SELECT * FROM admin WHERE Mail='$Mail";
     //   $res = mysqli_query($this->conn, $adminquery);
     //     if (mysqli_num_rows($res) == 1) {
@@ -246,7 +255,25 @@ return $temp;
         
     }
    
-
+ public function select_User_Name($Mail){
+         $query = "SELECT * FROM admin WHERE Mail='$Mail'";
+         $result = mysqli_query($this->conn, $query);  
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $adminid = $row['id'];
+                $userquery = "SELECT * from users";
+                $res = mysqli_query($this->conn, $userquery);
+                $temp = array();
+                while ($userrow = $res->fetch_assoc()) {
+                  if($userrow['isActive']!=0){
+                    if($userrow['admin_id']==$adminid){
+                      $temp[] = $userrow['Name'];
+                    }
+                  }
+                }
+         return $temp;
+        }
+    }
     public function Select_Recent_User($Mail){
         $que = "SELECT * FROM admin WHERE Mail='$Mail'";
         $res = mysqli_query($this->conn, $que);
@@ -264,8 +291,7 @@ return $temp;
         return $temp;
 
     }
-
-
+        
     public function Select_Total_Count(){
         // user
         $query1 = "SELECT * FROM users";
@@ -321,12 +347,17 @@ return $temp;
             $row = mysqli_fetch_assoc($result);
             $stored_password = $row['Password'];
             $Expiry = $row['Expiry'];
+            $Block = $row['active'];
             if($row['Expiry']>$current_date){
+               if($Block!=0){
                if ($Password === $stored_password) {
                   return "Success";
                 } else {
                   return "Decline";
                 }
+               }else{
+                  return "Blocked";
+               }
             }
             else{
                 return "Expired";
@@ -440,11 +471,16 @@ return $temp;
         if (mysqli_num_rows($result) == 1) {
             $row = mysqli_fetch_assoc($result);
             $stored_password = $row['Password'];
-            if ($Password === $stored_password) {
-                return "Success";
-            } else {
-                return "Decline";
-            }
+            $Block = $row['isActive'];
+            if($Block!=0){
+                if ($Password === $stored_password) {
+                    return "Success";
+                 } else {
+                     return "Decline";
+                 }
+            }else {
+                     return "Blocked";
+                 }
         } 
         else {
             return 'Decline';

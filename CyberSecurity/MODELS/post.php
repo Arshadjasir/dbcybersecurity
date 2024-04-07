@@ -202,15 +202,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
 
 
-public function insert_User($Name,$User,$Mail,$Password,$Whatsapp,$Facebook,$Instagram,$isActive,$Adminid){
+public function insert_User($Name,$Mail,$Password,$Whatsapp,$Facebook,$Instagram,$isActive,$Adminid){
     try {
+    $qu =  "SELECT * FROM users ORDER BY Creation_Date DESC limit 1";
+    $res = mysqli_query($this->conn, $qu);
+    $userid="";
+    while ($row = $res->fetch_assoc()) {
+        $userid = $row['id']+1;
+    }
     $get = "Select * from users where Mail = '$Mail'";
     $getresult = mysqli_query($this->conn, $get);
     $current_date = date('Y-m-d');
     if(mysqli_num_rows($getresult)<=0){
-    $query = "insert into users (Name,User,Mail,Password,Whatsapp,Facebook,Instagram,isActive,admin_id,Expiry_video) values ('$Name','$User','$Mail','$Password','$Whatsapp','$Facebook','$Instagram','$isActive','$Adminid','$current_date') ";
+    $query = "insert into users (id,Name,User,Mail,Password,Whatsapp,Facebook,Instagram,isActive,admin_id,Expiry_video) values ('$userid','$Name','$userid','$Mail','$Password','$Whatsapp','$Facebook','$Instagram','$isActive','$Adminid','$current_date') ";
     $result = mysqli_query($this->conn, $query);
-    return "success";   
+    if($result){
+        return "success";
+    }else{
+        return "not success";
+    }   
     }else{
     return "userexist";
     }

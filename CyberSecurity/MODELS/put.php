@@ -117,7 +117,9 @@ class Put
   public function update_Admin($id,$Name,$Mail,$Password,$Expiry,$Companyname){
     $get = "Select * from admin where Mail = '$Mail'";
     $getresult = mysqli_query($this->conn, $get);
+    $found = false;
     while ($row = mysqli_fetch_assoc($getresult)) {
+      $found = true;
       if($id==$row['id']){
         $query = "UPDATE admin set Name ='$Name', Mail ='$Mail',Password = '$Password', Expiry = '$Expiry',Companyname = '$Companyname' where id ='$id'";
         if (mysqli_query($this->conn, $query)) {
@@ -127,7 +129,20 @@ class Put
         return "userexist";
       }
     }     
+    if(!$found){
+      $gets = "Select * from admin where id = '$id'";
+       $getsresult = mysqli_query($this->conn, $gets);
+      while ($rows = mysqli_fetch_assoc($getsresult)) {
+      if($id==$rows['id']){
+       $query = "UPDATE admin set Name ='$Name', Mail ='$Mail',Password = '$Password', Expiry = '$Expiry',Companyname = '$Companyname' where id ='$id'";
+        if (mysqli_query($this->conn, $query)) {
+          return "Success";
+        }
+      }
+      
+    }
   }
+}
 
   public function block_Admin($id){
     $queri = "UPDATE admin set active = 0 where id ='$id'";
@@ -239,7 +254,9 @@ class Put
   public function update_User($id,$Name,$User,$Mail,$Password,$Whatsapp,$Facebook,$Instagram){
     $get = "Select * from users where Mail='$Mail'";
     $getres = mysqli_query($this->conn, $get);
+    $found = false;
     while($row=mysqli_fetch_assoc($getres)){
+      $found = true;
       if($id==$row['id']){
         $query = "UPDATE users set Name='$Name', User='$User',Mail='$Mail',Password='$Password',Whatsapp='$Whatsapp',Facebook='$Facebook',Instagram='$Instagram' where id ='$id'  ";
         $result=mysqli_query($this->conn, $query);
@@ -249,8 +266,20 @@ class Put
         return "decline";
       }
     }
+    if (!$found) {
+    $gets = "Select * from users where id='$id'";
+    $getsres = mysqli_query($this->conn, $gets);
+      while($rows=mysqli_fetch_assoc($getsres)){
+      if($id==$rows['id']){
+        $que = "UPDATE users set Name='$Name', User='$User',Mail='$Mail',Password='$Password',Whatsapp='$Whatsapp',Facebook='$Facebook',Instagram='$Instagram' where id ='$id'";
+        $res=mysqli_query($this->conn, $que);
+        // if(res){
+          return "Success";
+        // }
+      }
+      }
+   }
   }
-
   public function block_User($id){
     $queri = "UPDATE users set isActive = 0 where id ='$id'";
     if (mysqli_query($this->conn, $queri)) {
