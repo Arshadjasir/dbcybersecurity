@@ -42,19 +42,50 @@ class Delete
         } catch (\Throwable $th) {
            return $th;
         }
-        return "success";
     }
 
     public function delete_User($id){
         try {
-            //code...
-            $query = "delete from users where id ='$id' ";
-            $result = mysqli_query($this->conn, $query);
+            $sql_select = "SELECT * FROM users WHERE id = $id";
+            $result = mysqli_query($this->conn, $sql_select);
+            if ($result->num_rows > 0) {    
+             $row = $result->fetch_assoc();
+             $Name=$row['Name'];
+             $Mail=$row['Mail'];
+             $Password=$row['Password'];
+             $Whatsapp=$row['Whatsapp'];
+             $Facebook=$row['Facebook'];
+             $Instagram=$row['Instagram'];
+             $admin_id=$row['admin_id'];
+             $Creation_Date=$row['Creation_Date'];
+        
+             $sql_insert = "INSERT INTO removed_users (	Name, Mail, Password, Whatsapp,Facebook,Instagram,admin_id,Creation_Date) VALUES ('$Name','$Mail','$Password','$Whatsapp','$Facebook','$Instagram','$admin_id','$Creation_Date')";
+              if (mysqli_query($this->conn, $sql_insert) === TRUE) {
+                  $sql_delete = "delete from users where id ='$id' ";
+                         if ($this->conn->query($sql_delete) === TRUE) {
+                               return "Success";
+                         } else {
+                             return "Not Delete";
+                         }
+                  } else {
+                     return "Not inserted";
+                 }
+            } else {
+                return "wrong id";
+            }
+           
         } catch (\Throwable $th) {
            return $th;
         }
+        // try {
+        //     //code...
+        //     $query = "delete from users where id ='$id' ";
+        //     $result = mysqli_query($this->conn, $query);
+        // } catch (\Throwable $th) {
+        //    return $th;
+        // }
        
-        return "success";
+        // return "success";
     }
 }
 ?>

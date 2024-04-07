@@ -113,6 +113,15 @@ class Get
     return $temp;
 
    }
+   public function  select_All_Recent_Campaign(){
+    $query = "SELECT * FROM campaingn ORDER BY createdate DESC LIMIT 3";
+    $result = mysqli_query($this->conn, $query);
+    $temp = array();
+    while ($row = $result->fetch_assoc()) {
+        $temp[] = $row;
+    }
+    return $temp;
+   }
   
    public function Campaingn_Report($Mail){
     $que = "SELECT * FROM admin WHERE Mail='$Mail'";
@@ -234,7 +243,7 @@ return $temp;
                 }
          return $temp;
         }
-        
+
     //   $adminquery = "SELECT * FROM admin WHERE Mail='$Mail";
     //   $res = mysqli_query($this->conn, $adminquery);
     //     if (mysqli_num_rows($res) == 1) {
@@ -301,7 +310,14 @@ return $temp;
         $query2 = "SELECT * FROM admin";
         $result = mysqli_query($this->conn, $query2);
         $Admin = mysqli_num_rows($result);
-        $Share_Temp=100;
+        $current_date = date('Y-m-d');
+        $query3 = "SELECT * FROM admin WHERE Expiry_video > '$current_date'";
+        $result1 = mysqli_query($this->conn, $query3);
+        $query4 = "SELECT * FROM users WHERE Expiry_video > '$current_date'";
+        $result2 = mysqli_query($this->conn, $query4);
+
+        $Share_Temp = mysqli_num_rows($result1)+mysqli_num_rows($result2);
+
         $val = ["Admins" => $Admin, "Users" => $User,"Shared" =>$Share_Temp];
         return  $val ;
     }
