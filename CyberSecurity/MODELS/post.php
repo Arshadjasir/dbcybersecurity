@@ -87,6 +87,7 @@ public function insert_Campaingn($Sendlink,$Campaingn,$Email,$Filepath ){
               }
               $ins = "insert into senddata (Campain_id,user_id) values ('$Campaingn_id','$userid') ";
               $fin = mysqli_query($this->conn, $ins);
+              
             }
             } catch (\Throwable $th) {
                 throw $th;

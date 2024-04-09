@@ -39,16 +39,18 @@ class Put
     $result = mysqli_query($this->conn, $query);
     
     if ($result) {
-      // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
-    // if ($mailed) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-    return "Success";
+      $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+    if ($mailed) {
+     return "Success";
     } else {
       return "Decline";
    }
+    }else
+    {
+      return "Decline";
+    }
+    
+   
 }
 
  public function Renew_Admin_Videos($id,$Expiry){
@@ -95,6 +97,7 @@ class Put
         } else {
             return 'Decline';
        }
+       
   }
 
   public function Renew_Admin($id,$Expiry){
@@ -202,16 +205,17 @@ class Put
     $result = mysqli_query($this->conn, $query);
     
     if ($result) {
-      // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
-    // if ($mailed) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+      $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+    if ($mailed) {
     return "Success";
     } else {
       return "Decline";
-   }
+    }
+    }else
+    {
+      return "Decline";
+    }
+    
 }
 
   public function Admin_Forgot($Email,$confirmpass){
@@ -318,7 +322,7 @@ class Put
           return "Decline";
         }
     } else {
-        return false;
+        return "Decline";
     }
 }
 
@@ -402,18 +406,20 @@ public function user_forgot_pass($Mail){
   $result = mysqli_query($this->conn, $query);
   
   if ($result) {
-    // $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
-  // if ($mailed) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
-  return "Success";
+    $mailed = mail($Mail, "Your One-Time Password from Vebbox Software Solution", "Your OTP is: $otp");  
+  if ($mailed) {
+     return "Success";
   } else {
     return "Decline";
- }
+  }
+  
 }
+else
+    {
+      return "Decline";
+    }
 
+}
 }
 
 

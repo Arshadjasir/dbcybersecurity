@@ -13,6 +13,7 @@ class Get
     }
  
      public function Superadmin_login($Mail,$Password){
+         
         $query = "SELECT * FROM superadmin WHERE Mail='$Mail'";
         $result = mysqli_query($this->conn, $query);
         if (mysqli_num_rows($result) == 1) {
@@ -114,7 +115,7 @@ class Get
 
    }
    public function  select_All_Recent_Campaign(){
-    $query = "SELECT * FROM campaingn ORDER BY createdate DESC LIMIT 3";
+    $query = "SELECT * FROM campaingn ORDER BY createdate DESC LIMIT 2";
     $result = mysqli_query($this->conn, $query);
     $temp = array();
     while ($row = $result->fetch_assoc()) {

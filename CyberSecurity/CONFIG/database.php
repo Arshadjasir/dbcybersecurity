@@ -3,10 +3,12 @@ class Database
 {
 
    
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "cybersecurity";
+    // private $servername = "localhost";
+    private $servername = "193.203.184.1";
+
+    private $username = "u651328475_cybersecurity";
+    private $password = "Cybersecurity_123";
+    private $dbname = "u651328475_cybersecurity";
     private $conn;
 
     public function connect()
