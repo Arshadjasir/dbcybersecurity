@@ -9,4 +9,6 @@ $obj = new Get();
 
 $result = $obj->Superadmin_login($data->Mail,$data->Password);
 echo json_encode($result);
+
+
 ?>
